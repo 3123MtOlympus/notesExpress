@@ -15,19 +15,19 @@ if (saveNoteBtn) {
       e.preventDefault();
 
       // Get the feedback text from the DOM and assign it to a variable
-      let feedback = document.getElementById('note-textarea').value;
+      let noteText = document.getElementsByClassName('note-textarea').value;
       // Get the username text and add it to a variable
       let email = document.getElementById('feedbackUsername').value.trim();
 
-      // Create an object with the username and feedback
-      const newFeedback = {
-        feedback,
-        email,
-        feedbackType: 'Complaint',
-      };
+      // // Create an object with the username and feedback
+      // const newNote = {
+      //   feedback,
+      //   email,
+      //   feedbackType: 'Complaint',
+      // };
 
       // Fetch POST request to the server
-      fetch('api/feedback', {
+      fetch('api/notes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
