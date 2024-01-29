@@ -1,47 +1,29 @@
-const saveNoteBtn = document.getElementById('save-note');
-const newNoteBtn = document.getElementById('new-note');
-const clearNoteBtn = document.getElementById('clear-btn');
+const notes = require('express').Router();
+const { readFromFile, readAndAppend } = require('../helpers/fsUtils');
+const { v4: uuidv4 } = require('uuid');
 
-homeBtn.addEventListener('click', (e) => {
-  e.preventDefault();
-  window.location.href = '/';
+// GET Route for retrieving all the tips
+notes.get('/', (req, res) => {
+  readFromFile('./db/db.json').then((data) => res.json(JSON.parse(data)));
 });
 
-// Handle when a user submits feedback
+// POST Route for a new UX/UI tip
+notes.post('/', (req, res) => {
+  console.log(req.body);
 
-if (saveNoteBtn) {
-  saveNoteBtn
-    .addEventListener('submit', (e) => {
-      e.preventDefault();
+  const { title, text } = req.body;
 
-      // Get the feedback text from the DOM and assign it to a variable
-      let noteText = document.getElementsByClassName('note-textarea').value;
-      // Get the username text and add it to a variable
-      let email = document.getElementById('feedbackUsername').value.trim();
+  if (req.body) {
+    const newNotes = {
+      title,
+      text
+    };
 
-      // // Create an object with the username and feedback
-      // const newNote = {
-      //   feedback,
-      //   email,
-      //   feedbackType: 'Complaint',
-      // };
+    readAndAppend(newNotes, './db/db.json');
+    res.json(`Note added successfully`);
+  } else {
+    res.error('Error in adding Notes');
+  }
+});
 
-      // Fetch POST request to the server
-      fetch('api/notes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newFeedback),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          alert(data.status);
-          email = '';
-          feedback = '';
-        });
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
-}
+module.exports = notes;
